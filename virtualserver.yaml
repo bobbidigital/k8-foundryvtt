@@ -1,0 +1,21 @@
+apiVersion: k8s.nginx.org/v1
+kind: VirtualServer
+metadata:
+  name: foundryvtt
+  namespace: foundryvtt
+spec:
+  host: foundry.allthingsdork.com
+  tls:
+    secret: foundry-tls
+    redirect: 
+      enable: true
+  upstreams:
+  - name: foundryvtt
+    service: foundryvtt
+    port: 80
+
+  routes:
+    - path: /
+      action:
+        pass: foundryvtt
+

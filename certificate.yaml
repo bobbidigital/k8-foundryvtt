@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: foundry-certificate
+  namespace: foundryvtt
+spec:
+  secretName: foundry-tls
+  issuerRef:
+    name: letsencrypt-prod
+  commonName: foundry.allthingsdork.com
+  dnsNames:
+  - foundry.allthingsdork.com

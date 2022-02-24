@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: foundryvtt
+  namespace: foundryvtt
+  labels:
+    app: foundryvtt
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: foundryvtt
+  template:
+    metadata:
+      labels:
+        app: foundryvtt
+    spec:
+      volumes:
+        - name: foundrydata
+          awsElasticBlockStore:
+            volumeID:  vol-0d392ddb57e6e3748
+            fsType: ext4    
+      containers:
+      - name: foundryvtt
+        image: felddy/foundryvtt:0.8.9
+        resources:
+          limits:
+            memory: "2Gi"
+            cpu: "500m"
+        volumeMounts:
+          - mountPath: /data
+            name: foundrydata
+        ports:
+          - containerPort: 30000
+        env:
+          - name: FOUNDRY_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: foundry
+                key: username
+          - name: FOUNDRY_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: foundry
+                key: password
+          - name: FOUNDRY
+            
+            
