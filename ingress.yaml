@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: foundryvtt
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod #Instructs cert-manager to create the certificate resource itself
+    acme.cert-manager.io/http01-edit-in-place: "true" #Instructs cert-manager to edit this ingress resource (ingress/cafe-ingress) in-place to validate the letsencrypt challenge, instead of creating a new ingress resource
+    nginx.org/client-max-body-size: "10m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    nginx.org/websocket-services: "foundryvtt"
+spec:
+  tls:
+  - hosts:
+    - foundry.allthingsdork.com
+    secretName: foundry-tls
+  rules:
+  - host: foundry.allthingsdork.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: foundryvtt
+            port:
+              number: 80
+ 
